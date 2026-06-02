@@ -110,6 +110,16 @@ const io = new Server(server, {
   cors: { origin: "*" },
 });
 
+io.on("connection", (socket) => {
+  // console.log("Client connected:", socket.id);
+
+  // send to all clients
+  socket.on("chat message", (msg) => {
+    console.log("ms: ", msg)
+    io.emit("message", "Hello from " + msg);
+  })
+});
+
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
