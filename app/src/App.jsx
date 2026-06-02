@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import RoomList from "./components/RoomList";
 import ChatHeader from "./components/ChatHeader";
@@ -10,15 +10,51 @@ import NotificationsPage from "./pages/NotificationsPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import { rooms } from "./data/sampleData";
+import socket from "./socket";
 
 export default function App() {
   const [activePage, setActivePage] = useState("rooms");
   const [activeRoomId, setActiveRoomId] = useState(1);
   const [showRoomList, setShowRoomList] = useState(false);
 
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    const handleIncomingMessage = (data) => {
+      console.log("Received:", data);
+    };
+
+    socket.on("message", handleIncomingMessage);
+
+    return () => {
+      socket.off("message", handleIncomingMessage);
+    };
+  }, []);
+
+  console.log("logged");
+
+
+
+
+  function handleSendMessage() {
+    const userData = JSON.parse(localStorage.getItem("user"));
+
+    if (!userData?.email) return;
+
+    console.log("called");
+
+    socket.emit("chat message", userData.email);
+  }
+
+
+
   const activeRoom = rooms.find((r) => r.id === activeRoomId);
 
   const handleRoomSelect = (id) => {
+
+
     setActiveRoomId(id);
     setShowRoomList(false);
   };
@@ -45,11 +81,10 @@ export default function App() {
         <>
           {/* Room List Panel — desktop inline, mobile overlay */}
           <div
-            className={`shrink-0 ${
-              showRoomList
-                ? "fixed inset-y-0 left-0 z-30 flex shadow-2xl"
-                : "hidden md:flex"
-            }`}
+            className={`shrink-0 ${showRoomList
+              ? "fixed inset-y-0 left-0 z-30 flex shadow-2xl"
+              : "hidden md:flex"
+              }`}
           >
             <RoomList
               activeRoomId={activeRoomId}
@@ -64,6 +99,8 @@ export default function App() {
               onClick={() => setShowRoomList(false)}
             />
           )}
+
+          <button onClick={handleSendMessage}>Click</button>
 
           {/* Chat area */}
           <div className="flex flex-col flex-1 min-w-0">
