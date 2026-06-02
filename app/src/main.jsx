@@ -9,34 +9,34 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import GuestRoute from "./components/GuestRoute.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            <GuestRoute>
-              <LoginPage />
-            </GuestRoute>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <GuestRoute>
-              <SignupPage />
-            </GuestRoute>
-          }
-        />
-        <Route
-          path="/*"
-          element={
-            <ProtectedRoute>
-              <App />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
-  </StrictMode>,
+  // <StrictMode>
+  <BrowserRouter>
+    <Routes>
+      <Route
+        path="/login"
+        element={
+          // <GuestRoute>
+          // </GuestRoute>
+          <LoginPage />
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          // <GuestRoute>
+          // </GuestRoute>
+          <SignupPage />
+        }
+      />
+      <Route
+        path="/*"
+        element={
+          // <ProtectedRoute>
+          <App />
+          // </ProtectedRoute>
+        }
+      />
+    </Routes>
+  </BrowserRouter>
+  // </StrictMode>,
 );
